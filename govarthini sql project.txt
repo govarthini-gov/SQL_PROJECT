@@ -1,0 +1,367 @@
+create table branch(
+branch_id NUMBER PRIMARY KEY,
+branch_name VARCHAR2(50) NOT NULL,
+city VARCHAR2(50) NOT NULL
+);
+
+create table customer(
+customer_id NUMBER PRIMARY KEY,
+customer_name VARCHAR2(100) NOT NULL,
+phone NUMBER(20) UNIQUE,
+email VARCHAR2(50) UNIQUE,
+city VARCHAR2(50) NOT NULL
+);
+
+create table account(
+account_id NUMBER PRIMARY KEY,
+customer_id NUMBER NOT NULL,
+branch_id NUMBER NOT NULL,
+account_type VARCHAR2(20) DEFAULT 'SAVINGS',
+balance NUMBER(12,2) DEFAULT 0 CHECK (BALANCE >=0),
+opening_date DATE DEFAULT SYSDATE,
+
+CONSTRAINT FK_account_customer
+FOREIGN KEY (customer_id)
+REFERENCES customer(customer_id),
+
+CONSTRAINT FK_account_branch
+FOREIGN KEY (branch_id)
+REFERENCES branch(branch_id)
+);
+
+CREATE TABLE bank_transaction(
+transaction_id NUMBER PRIMARY KEY,
+account_id NUMBER NOT NULL,
+transaction_type VARCHAR2(20),
+amount NUMBER(12,2) CHECK (amount > 0),
+transaction_date DATE DEFAULT SYSDATE,
+
+CONSTRAINT fk_transaction_account
+FOREIGN KEY (account_id)
+REFERENCES ACCOUNT(account_id)
+);
+
+CREATE TABLE employee (
+employee_id NUMBER PRIMARY KEY,
+employee_name VARCHAR2(50) NOT NULL,
+branch_id NUMBER NOT NULL,
+designation VARCHAR2(30),
+salary NUMBER(10,2) CHECK (salary > 0),
+
+CONSTRAINT fk_employee_branch
+FOREIGN KEY (branch_id)
+REFERENCES BRANCH(branch_id)
+);
+
+select * from branch;
+
+INSERT INTO BRANCH VALUES (101, 'Main Branch', 'Chennai');
+INSERT INTO BRANCH VALUES (102, 'City Branch', 'Madurai');
+INSERT INTO BRANCH VALUES (103, 'Anna Nagar Branch', 'Chennai');
+commit;
+
+select * from customer;
+
+INSERT INTO CUSTOMER VALUES (1, 'Arun Kumar', '9876543210', 'arun@gmail.com', 'Chennai');
+INSERT INTO CUSTOMER VALUES (2, 'Bala Kumar', '9876543211', 'bala@gmail.com', 'Madurai');
+INSERT INTO CUSTOMER VALUES (3, 'Charan Raj', '9876543212', 'charan@gmail.com', 'Chennai');
+INSERT INTO CUSTOMER VALUES (4, 'Dinesh Kumar', '9876543213', 'dinesh@gmail.com', 'Coimbatore');
+INSERT INTO CUSTOMER VALUES (5, 'Eswaran S', '9876543214', 'eswaran@gmail.com', 'Chennai');
+INSERT INTO CUSTOMER VALUES (6, 'Fazil Ahmed', '9876543215', 'fazil@gmail.com', 'Madurai');
+INSERT INTO CUSTOMER VALUES (7, 'Gokul R', '9876543216', 'gokul@gmail.com', 'Salem');
+INSERT INTO CUSTOMER VALUES (8, 'Hari Prasad', '9876543217', 'hari@gmail.com', 'Chennai');
+INSERT INTO CUSTOMER VALUES (9, 'Imran Khan', '9876543218', 'imran@gmail.com', 'Madurai');
+INSERT INTO CUSTOMER VALUES (10, 'Jeeva M', '9876543219', 'jeeva@gmail.com', 'Coimbatore');
+
+
+
+
+INSERT INTO ACCOUNT VALUES (1001, 1, 101, 'SAVINGS', 25000, DATE '2026-01-10');
+INSERT INTO ACCOUNT VALUES (1002, 2, 102, 'SAVINGS', 40000, DATE '2026-01-15');
+INSERT INTO ACCOUNT VALUES (1003, 3, 101, 'CURRENT', 75000, DATE '2026-02-05');
+INSERT INTO ACCOUNT VALUES (1004, 4, 103, 'SAVINGS', 18000, DATE '2026-02-12');
+INSERT INTO ACCOUNT VALUES (1005, 5, 101, 'SAVINGS', 55000, DATE '2026-03-01');
+INSERT INTO ACCOUNT VALUES (1006, 6, 102, 'CURRENT', 90000, DATE '2026-03-10');
+INSERT INTO ACCOUNT VALUES (1007, 7, 102, 'SAVINGS', 32000, DATE '2026-03-20');
+INSERT INTO ACCOUNT VALUES (1008, 8, 103, 'CURRENT', 65000, DATE '2026-04-01');
+INSERT INTO ACCOUNT VALUES (1009, 9, 102, 'SAVINGS', 28000, DATE '2026-04-15');
+INSERT INTO ACCOUNT VALUES (1010, 10, 103, 'SAVINGS', 45000, DATE '2026-05-01');
+
+
+
+
+
+
+INSERT INTO EMPLOYEE VALUES (201, 'Ravi Kumar', 101, 'Manager', 55000);
+INSERT INTO EMPLOYEE VALUES (202, 'Suresh B', 101, 'Cashier', 30000);
+INSERT INTO EMPLOYEE VALUES (203, 'Karthik R', 102, 'Manager', 52000);
+INSERT INTO EMPLOYEE VALUES (204, 'Mohan Das', 102, 'Clerk', 28000);
+INSERT INTO EMPLOYEE VALUES (205, 'Vijay Kumar', 103, 'Manager', 50000);
+INSERT INTO EMPLOYEE VALUES (206, 'Prakash S', 103, 'Cashier', 31000);
+INSERT INTO EMPLOYEE VALUES (207, 'Aravind M', 101, 'Clerk', 27000);
+INSERT INTO EMPLOYEE VALUES (208, 'Manoj R', 102, 'Clerk', 26000);
+commit;
+
+select * from bank_transaction;
+
+INSERT INTO BANK_TRANSACTION VALUES (3001, 1001, 'DEPOSIT', 10000, DATE '2026-01-12');
+INSERT INTO BANK_TRANSACTION VALUES (3002, 1002, 'DEPOSIT', 15000, DATE '2026-01-18');
+INSERT INTO BANK_TRANSACTION VALUES (3003, 1003, 'WITHDRAW', 5000, DATE '2026-02-08');
+INSERT INTO BANK_TRANSACTION VALUES (3004, 1004, 'DEPOSIT', 8000, DATE '2026-02-15');
+INSERT INTO BANK_TRANSACTION VALUES (3005, 1005, 'DEPOSIT', 20000, DATE '2026-03-05');
+INSERT INTO BANK_TRANSACTION VALUES (3006, 1006, 'WITHDRAW', 10000, DATE '2026-03-12');
+INSERT INTO BANK_TRANSACTION VALUES (3007, 1007, 'DEPOSIT', 12000, DATE '2026-03-22');
+INSERT INTO BANK_TRANSACTION VALUES (3008, 1008, 'DEPOSIT', 18000, DATE '2026-04-03');
+INSERT INTO BANK_TRANSACTION VALUES (3009, 1009, 'WITHDRAW', 7000, DATE '2026-04-17');
+INSERT INTO BANK_TRANSACTION VALUES (3010, 1010, 'DEPOSIT', 15000, DATE '2026-05-03');
+INSERT INTO BANK_TRANSACTION VALUES (3011, 1001, 'WITHDRAW', 3000, DATE '2026-02-01');
+INSERT INTO BANK_TRANSACTION VALUES (3012, 1002, 'WITHDRAW', 5000, DATE '2026-02-10');
+INSERT INTO BANK_TRANSACTION VALUES (3013, 1003, 'DEPOSIT', 25000, DATE '2026-02-20');
+INSERT INTO BANK_TRANSACTION VALUES (3014, 1004, 'WITHDRAW', 2000, DATE '2026-03-01');
+INSERT INTO BANK_TRANSACTION VALUES (3015, 1005, 'WITHDRAW', 10000, DATE '2026-03-15');
+INSERT INTO BANK_TRANSACTION VALUES (3016, 1006, 'DEPOSIT', 30000, DATE '2026-03-20');
+INSERT INTO BANK_TRANSACTION VALUES (3017, 1007, 'WITHDRAW', 4000, DATE '2026-03-25');
+INSERT INTO BANK_TRANSACTION VALUES (3018, 1008, 'WITHDRAW', 6000, DATE '2026-04-10');
+INSERT INTO BANK_TRANSACTION VALUES (3019, 1009, 'DEPOSIT', 9000, DATE '2026-04-20');
+INSERT INTO BANK_TRANSACTION VALUES (3020, 1010, 'WITHDRAW', 5000, DATE '2026-05-10');
+INSERT INTO BANK_TRANSACTION VALUES (3021, 1001, 'DEPOSIT', 7000, DATE '2026-05-15');
+INSERT INTO BANK_TRANSACTION VALUES (3022, 1003, 'WITHDRAW', 8000, DATE '2026-05-18');
+INSERT INTO BANK_TRANSACTION VALUES (3023, 1005, 'DEPOSIT', 12000, DATE '2026-05-20');
+INSERT INTO BANK_TRANSACTION VALUES (3024, 1006, 'WITHDRAW', 15000, DATE '2026-05-22');
+INSERT INTO BANK_TRANSACTION VALUES (3025, 1008, 'DEPOSIT', 10000, DATE '2026-05-25');
+
+
+update account
+SET balance = 10000
+where account_id = 1001;
+
+delete from employee
+where employee_id = 208;
+
+commit;
+
+select * from customer;
+
+select customer_name, customer_id, city
+from customer;
+
+select * from customer
+where city = 'Chennai';
+
+select * from account
+where balance >50000;
+
+select * from account 
+where balance between 50000 AND 75000;
+
+select * from account
+where account_type = 'SAVINGS';
+
+select * from bank_transaction
+where transaction_type = 'DEPOSIT';
+
+select * from account
+where account_type = 'SAVINGS' AND balance >40000;
+
+select * from customer
+where city = 'Chennai' OR city = 'Madurai';
+
+select * from account
+where not account_type = 'CURRENT';
+
+select * from account
+where balance = 45000;
+
+select * from account
+where account_type <> 'SAVING';
+
+select * from account
+where balance <= 50000;
+
+select * from account
+where balance >=55000;
+
+select * from customer
+where city in ('Coimbatore','Madurai');
+
+select * from account
+where balance between 30000 and 75000;
+
+select * from customer
+where customer_name like 'A%';
+
+select * from account
+ORDER BY balance ASC;
+
+select * from account
+ORDER BY balance DESC;
+
+select UPPER (customer_name) from customer;
+
+select LOWER (customer_name) from customer;
+
+select LENGTH (customer_name) from customer;
+
+select SUBSTR (customer_name,1,5) from customer;
+
+select customer_id, balance,
+ROUND (balance  -3) AS rounded_value
+from account;
+
+select customer_id, balance,
+MOD (balance 25000) AS reminder
+from account;
+
+select customer_id,
+TO_CHAR(OPENING_DATE, 'DD-MM-YYYY') AS opening_date
+from account;
+
+select customer_name,
+NVL(address,'Address Not Available') AS address
+from customer;
+
+select count(*) AS total_customers 
+from customer;
+
+select count(*) AS total_accounts 
+from account;
+
+select SUM(balance) AS total_balance,
+    AVG(balance) AS average_balance,
+    MAX(balance) AS higher_balance,
+    MIN(balance) AS lower_balance
+from account;
+
+select city,
+COUNT(*) AS customer_count
+from customer
+GROUP BY city;
+
+select account_type,
+COUNT(*) AS account_count
+from account
+GROUP BY account_type;
+
+select account_type,
+SUM(balance) AS total_balance
+from account
+GROUP BY account_type;
+
+select branch_id,
+AVG(salary) AS average_salary
+from employee
+GROUP BY branch_id;
+
+select account_type,
+SUM(balance) AS total_balance
+from account
+GROUP BY account_type
+HAVING SUM(balance) > 55000;
+
+select c.customer_name, a.account_id, a.balance
+from customer c
+JOIN account a
+ON c.customer_id = a.customer_id;
+
+select c.customer_name, a.account_type, b.branch_name
+from customer c
+JOIN account a
+ON c.customer_id = a.customer_id
+JOIN branch b
+ON a.branch_id = b.branch_id;
+
+select e.employee_name, e.designation, b.branch_name
+from employee e
+INNER JOIN branch b
+ON e.branch_id = b.branch_id;
+
+select t.transaction_id, t.account_id, 
+t.transaction_type, t.amount,
+t.transaction_date
+from bank_transaction t
+INNER JOIN account a
+ON t.account_id = a.account_id;
+
+select c.customer_id, c.customer_name, a.account_id, a.balance
+from customer c
+LEFT JOIN account a
+ON c.customer_id = a.customer_id;
+
+select b.branch_id, b.branch_name, e.employee_name,
+e.designation
+from branch b
+LEFT OUTER JOIN employee e
+ON b.branch_id = e.branch_id;
+
+select account_id, balance,
+RANK() OVER(ORDER BY balance DESC)
+AS balance_rank
+from account;
+
+select account_id, balance,
+ROW_NUMBER() OVER(ORDER BY balance DESC)
+AS row_number
+from account;
+
+select employee_id, employee_name, branch_id,salary,
+RANK() OVER(PARTITION BY branch_id ORDER BY salary DESC)
+AS salary_rank
+from employee;
+
+select transaction_id, account_id, amount, transaction_date,
+SUM(amount) OVER(ORDER BY transaction_id)
+AS running_total
+from bank_transaction;
+
+select transaction_id, account_id, amount, transaction_date,
+LAG(amount) OVER(ORDER BY transaction_id)
+AS previous_salary
+from bank_transaction;
+
+select transaction_id, account_id, amount, transaction_date,
+LEAD(amount) OVER(ORDER BY transaction_id)
+AS next_salary
+from bank_transaction;
+
+WITH account_summary AS
+(
+select account_type,
+SUM(balance) AS total_balance
+from account
+GROUP BY account_type
+)
+select * from account_summary;
+
+WITH transaction_summary AS
+(
+select account_id,
+SUM(amount) AS total_amount
+from bank_transaction
+GROUP BY account_id
+)
+select * from transaction_summary;
+
+WITH employee_salary AS
+(
+select branch_id,
+AVG(salary) AS average_salary
+from employee
+GROUP BY branch_id
+)
+select * from employee_salary;
+
+WITH transaction_summary AS 
+(
+select account_id,
+SUM(amount) AS total_transaction
+from bank_transaction
+GROUP BY account_id
+)
+SELECT c.customer_name, a.account_id, a.account_type,
+a.balance,
+NVL(t.total_transaction, 0) AS total_transaction
+from customer c
+JOIN account a
+ON c.customer_id = a.customer_id
+LEFT JOIN transaction_summary t
+ON a.account_id = t.account_id;
